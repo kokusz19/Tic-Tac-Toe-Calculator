@@ -3,17 +3,19 @@ package com.kokusz19;
 import com.kokusz19.model.Direction;
 import com.kokusz19.model.Winner;
 
+import java.io.*;
 import java.util.*;
 
 public class Main {
 
+    private static String PATH_TO_INPUT = "input1.txt";
     private static Map<Integer, Map<Integer, String>> STATE;
     private static int CONNECTIONS_TO_WIN;
     private static int MAX_ROW;
     private static int MAX_COL;
 
     public static void main(String[] args) {
-        initGame();
+        loadState();
         printState();
         printWinner(findWinner());
     }
@@ -33,15 +35,38 @@ public class Main {
         }
     }
 
-    public static void initGame() {
-        // TODO: fix after reading
-        CONNECTIONS_TO_WIN = 3;
-        STATE = Map.of(
-                0, Map.of(0, "O", 2, "O"),
-                1, Map.of(0, "O", 1, "X"),
-                2, Map.of(0, "X", 1, "X", 2, "X"));
-        MAX_ROW = 3;
-        MAX_COL = 3;
+    public static void loadState() {
+        try (InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(PATH_TO_INPUT);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            if (inputStream == null) {
+                throw new IOException("Resource not found: " + PATH_TO_INPUT);
+            }
+
+            String line = reader.readLine();
+            MAX_ROW = Integer.valueOf(line);
+
+            line = reader.readLine();
+            MAX_COL = Integer.valueOf(line);
+
+            line = reader.readLine();
+            CONNECTIONS_TO_WIN = Integer.valueOf(line);
+
+            STATE = new HashMap<>();
+            int rowNum = 0;
+            while ((line = reader.readLine()) != null) {
+                Map<Integer, String> row = new HashMap<>();
+                for (int colNum = 0; colNum < line.length(); colNum++) {
+                    String character = line.substring(colNum, colNum+1);
+                    if(character.equals("X") || character.equals("O")) {
+                        row.put(colNum, character);
+                    }
+                }
+                STATE.put(rowNum, row);
+                rowNum++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static Winner findWinner() {

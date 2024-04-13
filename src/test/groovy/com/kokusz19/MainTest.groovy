@@ -10,7 +10,7 @@ class MainTest extends Specification {
 
 	def "initGame"() {
 		when:
-			main.initGame()
+			main.loadState()
 		then:
 			0 * _
 		and:
@@ -68,7 +68,7 @@ class MainTest extends Specification {
 
 	def "getColumnValues"() {
 		setup:
-			main.initGame()
+			main.loadState()
 		when:
 			def result = main.getColumnValues(0)
 		then:
@@ -79,7 +79,7 @@ class MainTest extends Specification {
 
 	def "findWinner"() {
 		setup:
-			main.initGame()
+			main.loadState()
 
 		when: "initGame"
 			def result = main.findWinner()
