@@ -113,13 +113,13 @@ public class Main {
                  BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 
                 String line = reader.readLine();
-                MAX_ROW = Integer.valueOf(line);
+                MAX_ROW = Integer.parseInt(line);
 
                 line = reader.readLine();
-                MAX_COL = Integer.valueOf(line);
+                MAX_COL = Integer.parseInt(line);
 
                 line = reader.readLine();
-                CONNECTIONS_TO_WIN = Integer.valueOf(line);
+                CONNECTIONS_TO_WIN = Integer.parseInt(line);
 
                 STATE = new HashMap<>();
                 int rowNum = 0;
@@ -129,13 +129,19 @@ public class Main {
                         String character = line.substring(colNum, colNum+1);
                         if(character.equals("X") || character.equals("O")) {
                             row.put(colNum, character);
+                        } else if(!character.equals(" ")) {
+                            throw new IllegalArgumentException("The given state contains illegal values. Only possible values are [\"X\", \"O\" or \" \"].");
                         }
                     }
                     STATE.put(rowNum, row);
                     rowNum++;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (NullPointerException nullPointerException) {
+                throw new IllegalArgumentException("File could not be opened!");
+            } catch (NumberFormatException numberFormatException) {
+                throw new IllegalArgumentException("Number format exception occurred.");
             }
         }
     }
