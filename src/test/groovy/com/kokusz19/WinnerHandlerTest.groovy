@@ -49,21 +49,20 @@ class WinnerHandlerTest extends Specification {
 			10                  || Winner.NO_WINNER
 	}
 
-	def "findWinner"() {
+	def "findWinner - #testCase"() {
 		setup:
-			Main.PATH_TO_INPUT = "input1.txt"
+			Main.PATH_TO_INPUT = inputFile
 			stateLoader.loadState()
 
-		when: "initGame"
+		when:
 			def result = winnerHandler.findWinner()
 		then:
-			assert result == Winner.PLAYER_A
+			assert result == expected
 
-		when: "no winner"
-			main.STATE = [(0): [(0): "O"],
-			              (1): [(1): "X"]]
-			result = winnerHandler.findWinner()
-		then:
-			assert result == Winner.NO_WINNER
+		where:
+			testCase        | inputFile     || expected
+			"simple game"   | "input1.txt"  || Winner.PLAYER_B
+			"complex game"  | "input2.txt"  || Winner.PLAYER_A
+			"no winner"     | "input3.txt"  || Winner.NO_WINNER
 	}
 }

@@ -15,7 +15,6 @@ class StateLoaderTest extends Specification {
 			0 * _
 		and:
 			noExceptionThrown()
-			stateHandler.printState()
 	}
 
 	def "loadState - sad cases"() {
