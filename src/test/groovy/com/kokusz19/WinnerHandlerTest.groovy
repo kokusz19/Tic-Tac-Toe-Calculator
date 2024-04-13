@@ -4,27 +4,12 @@ import com.kokusz19.model.Direction
 import com.kokusz19.model.Winner
 import spock.lang.Specification
 
-class MainTest extends Specification {
 
+class WinnerHandlerTest extends Specification {
+
+	def winnerHandler = Main.WinnerHandler
+	def stateLoader = Main.StateLoader
 	def main = new Main()
-
-	def "initGame"() {
-		when:
-			main.loadState()
-		then:
-			0 * _
-		and:
-			noExceptionThrown()
-	}
-
-	def "printState"() {
-		when:
-			main.printState()
-		then:
-			0 * _
-		and:
-			noExceptionThrown()
-	}
 
 	def "isWinnerPosition"() {
 		setup:  "_ _ _ X _ X X _ O O X _ |X X X| _ _ X"
@@ -32,7 +17,7 @@ class MainTest extends Specification {
 			main.CONNECTIONS_TO_WIN = 3
 
 		when:
-			def result = main.isWinnerPosition(line, lineElement, character)
+			def result = winnerHandler.isWinnerPosition(line, lineElement, character)
 		then:
 			0 * _
 		and:
@@ -54,7 +39,7 @@ class MainTest extends Specification {
 			main.MAX_ROW = 17
 
 		when:
-			def result = main.checkLine(line, Direction.ROW)
+			def result = winnerHandler.checkLine(line, Direction.ROW)
 		then:
 			0 * _
 		and:
@@ -66,30 +51,19 @@ class MainTest extends Specification {
 			10                  || Winner.NO_WINNER
 	}
 
-	def "getColumnValues"() {
-		setup:
-			main.loadState()
-		when:
-			def result = main.getColumnValues(0)
-		then:
-			assert result == [(0): "O",
-			           (1): "O",
-			           (2): "X"]
-	}
-
 	def "findWinner"() {
 		setup:
-			main.loadState()
+			stateLoader.loadState()
 
 		when: "initGame"
-			def result = main.findWinner()
+			def result = winnerHandler.findWinner()
 		then:
 			assert result == Winner.PLAYER_A
 
 		when: "no winner"
 			main.STATE = [(0): [(0): "O"],
 			              (1): [(1): "X"]]
-			result = main.findWinner()
+			result = winnerHandler.findWinner()
 		then:
 			assert result == Winner.NO_WINNER
 	}
