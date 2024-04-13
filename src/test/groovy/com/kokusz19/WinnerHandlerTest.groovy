@@ -1,6 +1,5 @@
 package com.kokusz19
 
-import com.kokusz19.model.Direction
 import com.kokusz19.model.Winner
 import spock.lang.Specification
 
@@ -36,10 +35,9 @@ class WinnerHandlerTest extends Specification {
 		setup:  "_ _ _ X _ X X _ O O X _ |X X X| _ _ X"
 			Map<Integer, Character> line = Map.of(3, "X", 5, "X", 6, "X", 8, "O", 9, "O", 10, "X", 12, "X", 13, "X", 14, "X", 17, "X")
 			main.CONNECTIONS_TO_WIN = connectionsToWin
-			main.MAX_ROW = 17
 
 		when:
-			def result = winnerHandler.checkLine(line, Direction.ROW)
+			def result = winnerHandler.checkLine(line)
 		then:
 			0 * _
 		and:
@@ -53,6 +51,7 @@ class WinnerHandlerTest extends Specification {
 
 	def "findWinner"() {
 		setup:
+			Main.PATH_TO_INPUT = "input1.txt"
 			stateLoader.loadState()
 
 		when: "initGame"

@@ -1,6 +1,5 @@
 package com.kokusz19;
 
-import com.kokusz19.model.Direction;
 import com.kokusz19.model.Winner;
 
 import java.io.*;
@@ -26,7 +25,7 @@ public class Main {
 
             // Check rows
             for (int row = 0; row < MAX_ROW; row++) {
-                winner = checkLine(STATE.getOrDefault(row, Collections.emptyMap()), Direction.ROW);
+                winner = checkLine(STATE.getOrDefault(row, Collections.emptyMap()));
                 if (winner != Winner.NO_WINNER) {
                     return winner;
                 }
@@ -34,7 +33,7 @@ public class Main {
 
             // Check columns
             for (int col = 0; col < MAX_COL; col++) {
-                winner = checkLine(StateHandler.getColumnValues(col), Direction.COLUMN);
+                winner = checkLine(StateHandler.getColumnValues(col));
                 if (winner != Winner.NO_WINNER) {
                     return winner;
                 }
@@ -51,7 +50,7 @@ public class Main {
             System.out.println("The winner is " + winner);
         }
 
-        private static Winner checkLine(Map<Integer, String> line, Direction direction) {
+        private static Winner checkLine(Map<Integer, String> line) {
             if (line.isEmpty()) {
                 return Winner.NO_WINNER;
             }
