@@ -37,7 +37,7 @@ class WinnerHandlerTest extends Specification {
 			main.CONNECTIONS_TO_WIN = connectionsToWin
 
 		when:
-			def result = winnerHandler.checkLine(line)
+			def result = winnerHandler.checkRow(line)
 		then:
 			0 * _
 		and:

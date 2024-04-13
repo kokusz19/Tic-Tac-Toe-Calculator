@@ -1,0 +1,11 @@
+8
+15
+4
+
+   O   X
+    X X O
+    OX  O
+    XOOXXXOO
+   O XXOOOX
+     X  XX
+    O

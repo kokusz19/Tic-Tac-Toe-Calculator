@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Main {
 
-    private static String PATH_TO_INPUT = "input1.txt";
+    private static String PATH_TO_INPUT = "input2.txt";
     private static Map<Integer, Map<Integer, String>> STATE;
     private static int CONNECTIONS_TO_WIN;
     private static int MAX_ROW;
@@ -23,24 +23,51 @@ public class Main {
         public static Winner findWinner() {
             Winner winner;
 
-            // Check rows
+            int checkedColumns = 0;
             for (int row = 0; row < MAX_ROW; row++) {
-                winner = checkLine(STATE.getOrDefault(row, Collections.emptyMap()));
+                for (int col = 0; col < MAX_COL; col++) {
+
+                    // Check columns
+                    // - enough to check them only once
+                    if(checkedColumns < MAX_COL) {
+                        checkedColumns++;
+                        winner = checkRow(StateHandler.getColumnValuesAsRow(col));
+                        if (winner != Winner.NO_WINNER) {
+                            return winner;
+                        }
+                    }
+
+                    // Check diagonals
+                    // - it's enough to check each diag once, hence the diagonals starting from the border cells are enough
+                    // - the last rows can be skipped, as there won't be any space left to get the necessary connections to win
+                    if ((row == 0 || col == 0 || col == MAX_COL-1) && row+CONNECTIONS_TO_WIN <= MAX_ROW) { /** KERET minusz utolsó sor*/
+                        // Check diag (lower right \)
+                        // - the last columns can be skipped, just as the last rows previously
+                        if (col+CONNECTIONS_TO_WIN <= MAX_COL) {
+                            winner = checkRow(StateHandler.getDiagonalValuesAsRow(row, col, false));
+                            if (winner != Winner.NO_WINNER) {
+                                return winner;
+                            }
+                        }
+
+                        // Check diag (lower left /)
+                        // - the first columns can be skipped, just as the last rows previously
+                        if (col-CONNECTIONS_TO_WIN+1 >= 0) {
+                            winner = checkRow(StateHandler.getDiagonalValuesAsRow(row, col, true));
+                            if (winner != Winner.NO_WINNER) {
+                                return winner;
+                            }
+                        }
+                    }
+                }
+
+                // Check rows
+                // - enough to check them only once
+                winner = checkRow(STATE.getOrDefault(row, Collections.emptyMap()));
                 if (winner != Winner.NO_WINNER) {
                     return winner;
                 }
             }
-
-            // Check columns
-            for (int col = 0; col < MAX_COL; col++) {
-                winner = checkLine(StateHandler.getColumnValues(col));
-                if (winner != Winner.NO_WINNER) {
-                    return winner;
-                }
-            }
-
-            // TODO
-            // Check diagonals
 
             // No winner found
             return Winner.NO_WINNER;
@@ -50,13 +77,18 @@ public class Main {
             System.out.println("The winner is " + winner);
         }
 
-        private static Winner checkLine(Map<Integer, String> line) {
-            if (line.isEmpty()) {
+        /**
+         * Checks if there are any winning positions in the given row
+         * @param row
+         * @return <code>Winner.PLAYER_A</code> if "X" wins, <code>Winner.PLAYER_B</code> if "O" wins, <code>Winner.NO_WINNER</code> if there are no winning positions
+         */
+        private static Winner checkRow(Map<Integer, String> row) {
+            if (row.isEmpty()) {
                 return Winner.NO_WINNER;
             }
 
-            for (Map.Entry<Integer, String> element : line.entrySet()) {
-                if(isWinnerPosition(line, element.getKey(), element.getValue())) {
+            for (Map.Entry<Integer, String> element : row.entrySet()) {
+                if(isWinnerPosition(row, element.getKey(), element.getValue())) {
                     return Winner.getWinner(element.getValue());
                 }
             }
@@ -64,6 +96,12 @@ public class Main {
             return Winner.NO_WINNER;
         }
 
+        /**
+         * @param line
+         * @param lineElement
+         * @param character
+         * @return <code>true</code> if the given line contains a winner position or not starting from the given character, else <code>false</code>
+         */
         private static boolean isWinnerPosition(Map<Integer, String> line, int lineElement, String character) {
             return isWinnerPosition(line, lineElement, character, 1);
         }
@@ -93,12 +131,32 @@ public class Main {
             }
         }
 
-        public static Map<Integer, String> getColumnValues(int column) {
+        public static Map<Integer, String> getColumnValuesAsRow(int column) {
             Map<Integer, String> columnValues = new HashMap<>();
 
             for (Map.Entry<Integer, Map<Integer, String>> row : STATE.entrySet()) {
-                if(row.getValue().get(column) != null) {
+                if (row.getValue().get(column) != null) {
                     columnValues.put(row.getKey(), row.getValue().get(column));
+                }
+            }
+
+            return columnValues;
+        }
+
+        /**
+         * @param row
+         * @param column
+         * @param isLowerLeftDiagonal <code>true</code> if lower left diagonal, <code>false</code> if lower right diagonal
+         * @return the values in the given diagonal as a row
+         */
+        public static Map<Integer, String> getDiagonalValuesAsRow(int row, int column, boolean isLowerLeftDiagonal) {
+            Map<Integer, String> columnValues = new HashMap<>();
+
+            for (int i = 0; isLowerLeftDiagonal ? row+i < MAX_ROW && column-i >= 0 : row+i < MAX_ROW && column+i < MAX_COL; i++) {
+                int finalI = i;
+                String nextCharacter = Optional.ofNullable(STATE.get(row + finalI)).map(currentRow -> currentRow.get(isLowerLeftDiagonal ? column - finalI : column + finalI)).orElse(null);
+                if(nextCharacter != null) {
+                    columnValues.put(i, nextCharacter);
                 }
             }
 
@@ -107,6 +165,9 @@ public class Main {
     }
 
     public static class StateLoader {
+        /**
+         * Loads the content of the file specified by <code>PATH_TO_INPUT</code>
+         */
         public static void loadState() {
             try (InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(PATH_TO_INPUT);
                  BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {

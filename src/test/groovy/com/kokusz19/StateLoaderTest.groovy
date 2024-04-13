@@ -5,14 +5,17 @@ import spock.lang.Specification
 
 class StateLoaderTest extends Specification {
 	def stateLoader = Main.StateLoader
+	def stateHandler = Main.StateHandler
 
 	def "loadState"() {
 		when:
+			Main.PATH_TO_INPUT = "input2.txt"
 			stateLoader.loadState()
 		then:
 			0 * _
 		and:
 			noExceptionThrown()
+			stateHandler.printState()
 	}
 
 	def "loadState - sad cases"() {

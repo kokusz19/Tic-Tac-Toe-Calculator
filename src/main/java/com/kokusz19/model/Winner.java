@@ -7,6 +7,7 @@ public enum Winner {
     PLAYER_B("O"),
     NO_WINNER;
 
+    private boolean winner;
     private String mark;
 
     Winner(){
@@ -14,6 +15,7 @@ public enum Winner {
     }
     Winner(String mark) {
         this.mark = mark;
+        this.winner = true;
     }
 
     public String getMark() {
@@ -29,6 +31,8 @@ public enum Winner {
 
     @Override
     public String toString() {
-        return String.format("%s (mark=%s)", this.name(), this.mark);
+        return this.winner
+                ? String.format("%s (mark=%s)", this.name(), this.mark)
+                : this.name();
     }
 }
