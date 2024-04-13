@@ -51,8 +51,7 @@ class WinnerHandlerTest extends Specification {
 
 	def "findWinner - #testCase"() {
 		setup:
-			Main.PATH_TO_INPUT = inputFile
-			stateLoader.loadState()
+			stateLoader.loadState(inputFile)
 
 		when:
 			def result = winnerHandler.findWinner()

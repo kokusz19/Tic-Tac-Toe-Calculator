@@ -1,5 +1,6 @@
 package com.kokusz19
 
+import com.kokusz19.model.InputFiles
 import spock.lang.Specification
 
 
@@ -9,8 +10,7 @@ class StateLoaderTest extends Specification {
 
 	def "loadState"() {
 		when:
-			Main.PATH_TO_INPUT = "input2.txt"
-			stateLoader.loadState()
+			stateLoader.loadState(InputFiles.COMPLEX_GAME.path)
 		then:
 			0 * _
 		and:
@@ -19,8 +19,7 @@ class StateLoaderTest extends Specification {
 
 	def "loadState - sad cases"() {
 		when: "The given filepath doesn't exist"
-			Main.PATH_TO_INPUT = "nonExistingFile.txt"
-			stateLoader.loadState()
+			stateLoader.loadState(InputFiles.NON_EXISTING.path)
 		then:
 			0 * _
 		and:
@@ -28,8 +27,7 @@ class StateLoaderTest extends Specification {
 			assert ex.message == "File could not be opened!"
 
 		when: "A number field couldn't be parsed"
-			Main.PATH_TO_INPUT = "numberFormatException.txt"
-			stateLoader.loadState()
+			stateLoader.loadState(InputFiles.NUMBER_FORMAT_EXCEPTION.path)
 		then:
 			0 * _
 		and:
@@ -37,8 +35,7 @@ class StateLoaderTest extends Specification {
 			assert ex.message == "Number format exception occurred."
 
 		when: "Higher CONNECTION_TO_WIN was passed, than available spaces"
-			Main.PATH_TO_INPUT = "wrongConnectionToWinCount.txt"
-			stateLoader.loadState()
+			stateLoader.loadState(InputFiles.WRONG_CONNECTION_TO_WIN_COUNT.path)
 		then:
 			0 * _
 		and:
@@ -46,8 +43,7 @@ class StateLoaderTest extends Specification {
 			assert ex.message == "Can't have a higher connection to win count, than available spaces on the board!"
 
 		when: "The state contains illegal symbols"
-			Main.PATH_TO_INPUT = "illegalArguments.txt"
-			stateLoader.loadState()
+			stateLoader.loadState(InputFiles.ILLEGAL_ARGUMENTS.path)
 		then:
 			0 * _
 		and:

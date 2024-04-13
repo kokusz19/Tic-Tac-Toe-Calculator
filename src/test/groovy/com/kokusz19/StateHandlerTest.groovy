@@ -1,5 +1,6 @@
 package com.kokusz19
 
+import com.kokusz19.model.InputFiles
 import spock.lang.Specification
 
 
@@ -10,7 +11,7 @@ class StateHandlerTest extends Specification {
 
 	def "printState"() {
 		setup:
-			stateLoader.loadState()
+			stateLoader.loadState(InputFiles.COMPLEX_GAME.path)
 
 		when:
 			stateHandler.printState()
@@ -22,21 +23,19 @@ class StateHandlerTest extends Specification {
 
 	def "getColumnValuesAsRow"() {
 		setup:
-			Main.PATH_TO_INPUT = "input1.txt"
-			stateLoader.loadState()
+			stateLoader.loadState(InputFiles.SIMPLE_GAME.path)
 
 		when:
 			def result = stateHandler.getColumnValuesAsRow(0)
 		then:
-			assert result == [(0): "O",
-			                  (1): "O",
-			                  (2): "X"]
+			assert result == [(0): "X",
+			                  (1): "X",
+			                  (2): "O"]
 	}
 
 	def "getDiagonalValuesAsRow"() {
 		setup:
-			Main.PATH_TO_INPUT = "input2.txt"
-			stateLoader.loadState()
+			stateLoader.loadState(InputFiles.COMPLEX_GAME.path)
 
 		when:
 			def result = stateHandler.getDiagonalValuesAsRow(0, 10, true)

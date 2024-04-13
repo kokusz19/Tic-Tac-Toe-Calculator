@@ -14,7 +14,7 @@ public class Main {
     private static int MAX_COL;
 
     public static void main(String[] args) {
-        StateLoader.loadState();
+        StateLoader.loadState(PATH_TO_INPUT);
         StateHandler.printState();
         WinnerHandler.printWinner(WinnerHandler.findWinner());
     }
@@ -168,8 +168,8 @@ public class Main {
         /**
          * Loads the content of the file specified by <code>PATH_TO_INPUT</code>
          */
-        public static void loadState() {
-            try (InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(PATH_TO_INPUT);
+        public static void loadState(String pathToInput) {
+            try (InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(pathToInput);
                  BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 
                 String line = reader.readLine();
