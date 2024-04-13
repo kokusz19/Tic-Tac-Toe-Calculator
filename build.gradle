@@ -1,10 +1,19 @@
 plugins {
+    id "application"
     id 'idea'
     id 'groovy'
 }
 
 group = 'com.kokusz19'
 version = '1.0-SNAPSHOT'
+
+ext {
+    javaMainClass = "com.kokusz19.Main"
+}
+
+application {
+    mainClassName = javaMainClass
+}
 
 repositories {
     mavenCentral()

@@ -5,9 +5,12 @@ import spock.lang.Specification
 
 class StateHandlerTest extends Specification {
 
+	def stateLoader = Main.StateLoader
 	def stateHandler = Main.StateHandler
 
 	def "printState"() {
+		setup:
+			stateLoader.loadState()
 		when:
 			stateHandler.printState()
 		then:
@@ -18,7 +21,7 @@ class StateHandlerTest extends Specification {
 
 	def "getColumnValues"() {
 		setup:
-			Main.StateLoader.loadState()
+			stateLoader.loadState()
 		when:
 			def result = stateHandler.getColumnValues(0)
 		then:
