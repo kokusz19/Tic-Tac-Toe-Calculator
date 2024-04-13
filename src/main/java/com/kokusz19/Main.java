@@ -181,6 +181,10 @@ public class Main {
                 line = reader.readLine();
                 CONNECTIONS_TO_WIN = Integer.parseInt(line);
 
+                if (CONNECTIONS_TO_WIN > MAX_COL && CONNECTIONS_TO_WIN > MAX_ROW) {
+                    throw new IllegalArgumentException("Can't have a higher connection to win count, than available spaces on the board!");
+                }
+
                 STATE = new HashMap<>();
                 int rowNum = 0;
                 while ((line = reader.readLine()) != null) {
