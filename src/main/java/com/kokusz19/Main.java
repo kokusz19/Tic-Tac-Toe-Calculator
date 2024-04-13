@@ -87,12 +87,8 @@ public class Main {
             return Winner.NO_WINNER;
         }
 
-        int maxLength = Direction.ROW.equals(direction)
-                ? MAX_ROW
-                : MAX_COL;
-
         for (Map.Entry<Integer, String> element : line.entrySet()) {
-            if(isWinnerPosition(line, element.getKey(), element.getValue(), maxLength)) {
+            if(isWinnerPosition(line, element.getKey(), element.getValue())) {
                 return Winner.getWinner(element.getValue());
             }
         }
@@ -100,10 +96,10 @@ public class Main {
         return Winner.NO_WINNER;
     }
 
-    private static boolean isWinnerPosition(Map<Integer, String> line, int lineElement, String character, int maxLength) {
-        return isWinnerPosition(line, lineElement, character, 1, maxLength);
+    private static boolean isWinnerPosition(Map<Integer, String> line, int lineElement, String character) {
+        return isWinnerPosition(line, lineElement, character, 1);
     }
-    private static boolean isWinnerPosition(Map<Integer, String> line, int lineElement, String character, int count, int maxLength) {
+    private static boolean isWinnerPosition(Map<Integer, String> line, int lineElement, String character, int count) {
         // TODO: check for easier solution
         if (!character.equals(line.get(lineElement+1))) {
             return false;
@@ -111,7 +107,7 @@ public class Main {
 
         count++;
         if (count != CONNECTIONS_TO_WIN) {
-            return isWinnerPosition(line, lineElement+1, character, count, maxLength);
+            return isWinnerPosition(line, lineElement+1, character, count);
         }
 
         return true;

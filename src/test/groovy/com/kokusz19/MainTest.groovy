@@ -30,10 +30,9 @@ class MainTest extends Specification {
 		setup:  "_ _ _ X _ X X _ O O X _ |X X X| _ _ X"
 			Map<Integer, Character> line = Map.of(3, "X", 5, "X", 6, "X", 8, "O", 9, "O", 10, "X", 12, "X", 13, "X", 14, "X", 17, "X")
 			main.CONNECTIONS_TO_WIN = 3
-			def maxLength = 16
 
 		when:
-			def result = main.isWinnerPosition(line, lineElement, character, maxLength)
+			def result = main.isWinnerPosition(line, lineElement, character)
 		then:
 			0 * _
 		and:
