@@ -1,22 +1,28 @@
 package com.kokusz19
 
+import com.kokusz19.model.InputFiles
 import com.kokusz19.model.Winner
 import spock.lang.Specification
+import spock.lang.Unroll
 
 
 class WinnerHandlerTest extends Specification {
 
+	def main = new Main()
 	def winnerHandler = Main.WinnerHandler
 	def stateLoader = Main.StateLoader
-	def main = new Main()
 
+	// "_ _ _ X _ X X _ O O X _ |X X X| _ _ X"
+	def row = [(3) : "X", (5) : "X", (6) : "X", (8) : "O", (9) : "O",
+	           (10): "X", (12): "X", (13): "X", (14): "X", (17): "X"]
+
+	@Unroll
 	def "isWinnerPosition"() {
-		setup:  "_ _ _ X _ X X _ O O X _ |X X X| _ _ X"
-			Map<Integer, Character> line = Map.of(3, "X", 5, "X", 6, "X", 8, "O", 9, "O", 10, "X", 12, "X", 13, "X", 14, "X", 17, "X")
+		setup:
 			main.CONNECTIONS_TO_WIN = 3
 
 		when:
-			def result = winnerHandler.isWinnerPosition(line, lineElement, character)
+			def result = winnerHandler.isWinnerPosition(row, lineElement, character)
 		then:
 			0 * _
 		and:
@@ -31,13 +37,13 @@ class WinnerHandlerTest extends Specification {
 			17          | "X"       || false        // "element 17 -> _ _ _ X _ X X _ O O X _ X X X _ _ |X|"
 	}
 
+	@Unroll
 	def "checkLine"() {
-		setup:  "_ _ _ X _ X X _ O O X _ |X X X| _ _ X"
-			Map<Integer, Character> line = Map.of(3, "X", 5, "X", 6, "X", 8, "O", 9, "O", 10, "X", 12, "X", 13, "X", 14, "X", 17, "X")
+		setup:
 			main.CONNECTIONS_TO_WIN = connectionsToWin
 
 		when:
-			def result = winnerHandler.checkRow(line)
+			def result = winnerHandler.checkRow(row)
 		then:
 			0 * _
 		and:
@@ -49,9 +55,10 @@ class WinnerHandlerTest extends Specification {
 			10                  || Winner.NO_WINNER
 	}
 
+	@Unroll
 	def "findWinner - #testCase"() {
 		setup:
-			stateLoader.loadState(inputFile)
+			stateLoader.loadState(inputFilePath)
 
 		when:
 			def result = winnerHandler.findWinner()
@@ -59,9 +66,9 @@ class WinnerHandlerTest extends Specification {
 			assert result == expected
 
 		where:
-			testCase        | inputFile     || expected
-			"simple game"   | "input1.txt"  || Winner.PLAYER_B
-			"complex game"  | "input2.txt"  || Winner.PLAYER_A
-			"no winner"     | "input3.txt"  || Winner.NO_WINNER
+			testCase        | inputFilePath                 || expected
+			"simple game"   | InputFiles.SIMPLE_GAME.path   || Winner.PLAYER_B
+			"complex game"  | InputFiles.COMPLEX_GAME.path  || Winner.PLAYER_A
+			"no winner"     | InputFiles.NO_WINNER.path     || Winner.NO_WINNER
 	}
 }

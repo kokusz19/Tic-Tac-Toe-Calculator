@@ -5,8 +5,8 @@ import spock.lang.Specification
 
 
 class StateLoaderTest extends Specification {
+
 	def stateLoader = Main.StateLoader
-	def stateHandler = Main.StateHandler
 
 	def "loadState"() {
 		when:
